@@ -7,8 +7,8 @@ import (
 )
 
 func LoginView(g *gin.RouterGroup) {
-	g.POST("main", func(c *gin.Context) {
-		if result, status, err := MainLogin(c); err != nil {
+	g.POST("", func(c *gin.Context) {
+		if result, status, err := Login(c); err != nil {
 			c.AbortWithStatusJSON(status, result)
 		} else {
 			c.JSON(status, result)
@@ -16,13 +16,19 @@ func LoginView(g *gin.RouterGroup) {
 	})
 }
 
-func MainLogin(c *gin.Context) (*map[string]interface{}, int, error) {
+func Login(c *gin.Context) (*map[string]interface{}, int, error) {
 	var userinfo LoginModel
-	if err := c.ShouldBindJSON(&userinfo); err != nil {
+	err := c.ShouldBindJSON(&userinfo)
+	if err != nil {
 		return &map[string]interface{}{
 			"message": err.Error(),
 			"status":  0,
 		}, http.StatusBadRequest, err
+	} else if userinfo.StudentId == "" || userinfo.Name == "" {
+		return &map[string]interface{}{
+			"message": "学号和姓名不能为空",
+			"status":  0,
+		}, http.StatusBadRequest, nil
 	}
 	user := UserModel{
 		StudentId: userinfo.StudentId,
@@ -35,7 +41,6 @@ func MainLogin(c *gin.Context) (*map[string]interface{}, int, error) {
 			"status":  0,
 		}, http.StatusBadRequest, err
 	}
-	var token string
 	if !has {
 		_, err := db.Insert(user)
 		if err != nil {
@@ -45,7 +50,7 @@ func MainLogin(c *gin.Context) (*map[string]interface{}, int, error) {
 			}, http.StatusBadRequest, err
 		}
 	}
-	token = userinfo.GenerateToken()
+	token := userinfo.GenerateToken()
 	return &map[string]interface{}{
 		"message": "登录成功！",
 		"status":  1,

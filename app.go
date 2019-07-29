@@ -12,13 +12,13 @@ var (
 )
 
 func main() {
+	go route.Run(":8080")
 	go socket.Serve()
 	defer socket.Close()
 	http.HandleFunc("/socket.io/", handle)
 	//http.Handle("/", http.FileServer(http.Dir("./asset")))
 	log.Println("Serving at localhost:8000...")
 	log.Fatal(http.ListenAndServe(":8000", nil))
-	route.Run()
 }
 
 func handle(w http.ResponseWriter, r *http.Request) {

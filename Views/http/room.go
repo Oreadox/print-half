@@ -5,8 +5,8 @@ import (
 )
 
 func RoomView(g *gin.RouterGroup) {
-	g.POST("main", func(c *gin.Context) {
-		if result, status, err := MainLogin(c); err != nil {
+	g.POST("", func(c *gin.Context) {
+		if result, status, err := Login(c); err != nil {
 			c.AbortWithStatusJSON(status, result)
 		} else {
 			c.JSON(status, result)
