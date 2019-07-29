@@ -13,7 +13,9 @@ var (
 func init() {
 	api := route.Group("/api")
 	LoginView(api.Group("/auth"))
-	RoomView(api.Group("/room", VerifyToken))
+	//RoomView(api.Group("/room", VerifyToken))
+	PictureView(api.Group("/picture", VerifyToken)) //获取图片信息
+	LikeView(api.Group("/like", VerifyToken))       //点赞及查看排名
 }
 
 func GetRoute() *gin.Engine {

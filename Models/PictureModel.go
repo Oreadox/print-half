@@ -6,12 +6,13 @@ import (
 )
 
 type PictureModel struct {
-	ID             int `xorm:"pk autoincr"`
+	Id             int `xorm:"pk autoincr"`
 	UserId1        int
 	UserId2        int
 	TopFileName    string    `xorm:"varchar(128)"`
 	BottomFileName string    `xorm:"varchar(128)"`
 	CreateTime     time.Time `xorm:"datetime created notnull"`
+	LikeNum        int       `xorm:"default 0"`
 }
 
 func (PictureModel) TableName() string {
