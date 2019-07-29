@@ -12,10 +12,11 @@ func Join(s socketio.Conn, json map[string]interface{}) {
 	token := json["token"].(string)
 	user, err := VerifyAuthToken(token)
 	if err != "" {
-		s.Emit("join", err)
+		s.Emit("join", jsonify{
+			"message": err,
+		})
 	} else {
 		s.SetContext(user.Id)
-		// 加入房间（还没写）
 		playingNum := StatusModel{Desc: "游戏人数"}
 		_, err := db.Get(&playingNum)
 		playingNum.Value += 1

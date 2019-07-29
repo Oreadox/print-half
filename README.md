@@ -17,8 +17,8 @@
       // 上述设置修改Config/config.go文件也可
 
 ## 接口文档
-- [HTTP](#)
-- [WebSocket](#)      
+- [HTTP](https://github.com/yangchen29/print-half/blob/master/Docs/http.md)
+- [WebSocket](https://github.com/yangchen29/print-half/blob/master/Docs/WebSocket.md)      
 
 
 
