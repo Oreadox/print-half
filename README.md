@@ -20,6 +20,3 @@
 - [HTTP](https://github.com/yangchen29/print-half/blob/master/Docs/http.md)
 - [WebSocket](https://github.com/yangchen29/print-half/blob/master/Docs/WebSocket.md)      
 
-
-
-
