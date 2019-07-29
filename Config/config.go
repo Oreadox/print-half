@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	DBUri                     = "user:user@/db1?charset=utf8"
+	DBUri                     = GetEnviron("SECRET_KEY", "user:user@/db1?charset=utf8")
 	Debug                     = false
 	SECRET_KEY                = GetEnviron("SECRET_KEY", "viWxab60cncwhkpetBlwmmpi")
 	ExpiresTime time.Duration = 24 * 7 // token过期时间，单位为小时
