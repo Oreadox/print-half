@@ -39,7 +39,7 @@ func Login(c *gin.Context) (*map[string]interface{}, int, error) {
 		return &map[string]interface{}{
 			"message": err.Error(),
 			"status":  0,
-		}, http.StatusBadRequest, err
+		}, http.StatusInternalServerError, err
 	}
 	if !has {
 		_, err := db.Insert(user)
@@ -47,7 +47,7 @@ func Login(c *gin.Context) (*map[string]interface{}, int, error) {
 			return &map[string]interface{}{
 				"message": err.Error(),
 				"status":  0,
-			}, http.StatusBadRequest, err
+			}, http.StatusNotFound, err
 		}
 	}
 	token := userinfo.GenerateToken()

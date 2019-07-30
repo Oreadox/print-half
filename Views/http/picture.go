@@ -42,7 +42,7 @@ func GetPicture(c *gin.Context) (*map[string]interface{}, int, error) {
 		return &map[string]interface{}{
 			"message": "该图不存在",
 			"status":  0,
-		}, http.StatusBadRequest, err
+		}, http.StatusNotFound, err
 	}
 	user1, user2 := UserModel{
 		Id: picture.UserId1,
@@ -67,12 +67,17 @@ func GetPicture(c *gin.Context) (*map[string]interface{}, int, error) {
 func GetPictures(c *gin.Context) (*map[string]interface{}, int, error) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pictures := make([]PictureModel, 0)
-	db.Limit(12, 12*(page-1)).Find(&pictures)
-	if len(pictures) == 0 {
+	err := db.Limit(12, 12*(page-1)).Find(&pictures)
+	if err != nil {
+		return &map[string]interface{}{
+			"message": err.Error(),
+			"status":  0,
+		}, http.StatusInternalServerError, err
+	} else if len(pictures) == 0 {
 		return &map[string]interface{}{
 			"message": "该页不存在",
 			"status":  0,
-		}, http.StatusBadRequest, nil
+		}, http.StatusNotFound, nil
 	}
 	total, _ := db.Count(PictureModel{})
 	total_page := total / 12
