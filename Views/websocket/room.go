@@ -3,7 +3,6 @@ package websocket
 import (
 	. "PrintHalf/Models"
 	"github.com/googollee/go-socket.io"
-	"log"
 )
 
 var matching []socketio.Conn
@@ -17,14 +16,6 @@ func Join(s socketio.Conn, json map[string]interface{}) {
 		})
 	} else {
 		s.SetContext(user.Id)
-		playingNum := StatusModel{Desc: "游戏人数"}
-		_, err := db.Get(&playingNum)
-		playingNum.Value += 1
-		_, err = db.Id(playingNum.Id).Cols("value").Update(&playingNum)
-		if err != nil {
-			log.Println(err.Error())
-			return
-		}
 		s.Emit("join", jsonify{
 			"message": "进入房间成功",
 		})
@@ -34,6 +25,20 @@ func Join(s socketio.Conn, json map[string]interface{}) {
 			matching = append(matching, s)
 		}
 	}
+}
+
+func Exit(s socketio.Conn) {
+	j := 0
+	for _, val := range matching {
+		if val != s {
+			matching[j] = val
+			j++
+		}
+	}
+	matching = matching[:j]
+	s.Emit("exit", jsonify{
+		"message": "退出房间成功",
+	})
 }
 
 // 匹配
