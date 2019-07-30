@@ -47,7 +47,7 @@ func Login(c *gin.Context) (*map[string]interface{}, int, error) {
 			return &map[string]interface{}{
 				"message": err.Error(),
 				"status":  0,
-			}, http.StatusNotFound, err
+			}, http.StatusInternalServerError, err
 		}
 	}
 	token := userinfo.GenerateToken()

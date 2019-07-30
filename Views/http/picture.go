@@ -27,7 +27,7 @@ func PictureView(g *gin.RouterGroup) {
 }
 
 func GetPicture(c *gin.Context) (*map[string]interface{}, int, error) {
-	id, _ := strconv.Atoi(c.Query("page"))
+	id, _ := strconv.Atoi(c.Query("id"))
 	picture := PictureModel{
 		Id: id,
 	}
@@ -89,6 +89,7 @@ func GetPictures(c *gin.Context) (*map[string]interface{}, int, error) {
 		db.Get(user1)
 		db.Get(user2)
 		picture_data := map[string]interface{}{
+			"id":               picture.Id,
 			"name1":            user1.Name,
 			"name2":            user2.Name,
 			"top_file_name":    picture.TopFileName,
