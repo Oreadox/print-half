@@ -12,6 +12,7 @@ func Connect(s socketio.Conn) error {
 		"message": "连接建立成功",
 	})
 	fmt.Printf("%+v", s)
+	//s.c
 	return nil
 }
 

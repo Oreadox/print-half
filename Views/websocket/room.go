@@ -2,6 +2,7 @@ package websocket
 
 import (
 	. "PrintHalf/Models"
+	utils "PrintHalf/Utils"
 	"github.com/googollee/go-socket.io"
 	"log"
 )
@@ -10,7 +11,7 @@ var matching []socketio.Conn
 
 func Join(s socketio.Conn, json map[string]interface{}) {
 	token := json["token"].(string)
-	user, err := VerifyAuthToken(token)
+	user, err := utils.VerifyAuthToken(token)
 	if err != "" {
 		s.Emit("join", jsonify{
 			"message": err,
