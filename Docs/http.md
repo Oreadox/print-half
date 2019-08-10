@@ -173,3 +173,29 @@
           "status": 0
       }, 500
       
+## 获取图片
+
+- url: https://draw2019.oss-cn-shanghai.aliyuncs.com/picture/pic_name
+- method: GET
+ 
+ 
+## 上传图片
+先将图片上传至服务器，服务器会把图片上传到oss上
+
+- url: /api/room/upload
+- method: GET
+- request_header: Authorization: token
+- args:      
+
+| args | nullable | type | remark   |
+|:------:|:------:|:------:|:------:|
+|    image    |    false    |    file   |    图片（通过form发送）    |
+
+      
+- return:
+
+      {
+          "message": "成功",
+          "status": 1
+      }, 200
+
