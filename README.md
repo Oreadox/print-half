@@ -12,8 +12,14 @@
       
 - 环境变量设置      
     
-      SECRET_KEY : 加密密钥
-      DBUri : 数据库URL
+      SecretKey: 加密密钥
+      DbUri: 数据库URL
+      ExpiresTime: Token过期时间
+      //OSS设置:
+      AccessKeyId
+      AccessKeySecret
+      Endpoint
+      BucketName
       // 上述设置修改Config/config.go文件也可
 
 ## 接口文档
