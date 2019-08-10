@@ -1,6 +1,7 @@
 package http
 
 import (
+	"PrintHalf/Config"
 	utils "PrintHalf/Utils"
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -40,7 +41,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			"status":  0,
 		}, http.StatusInternalServerError, err
 	}
-	err = UploadFile(out)
+	err = UploadFile(filename, out)
 	if err != nil {
 		log.Println(err)
 		return &map[string]interface{}{
@@ -48,7 +49,10 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			"status":  0,
 		}, http.StatusInternalServerError, err
 	}
-
+	return &map[string]interface{}{
+		"message": "成功",
+		"status":  1,
+	}, http.StatusOK, nil
 }
 
 func SaveFile(file multipart.File, filename string) (*os.File, error) {
@@ -64,17 +68,17 @@ func SaveFile(file multipart.File, filename string) (*os.File, error) {
 	return out, nil
 }
 
-func UploadFile(fd *os.File) error {
-	client, err := oss.New("<yourEndpoint>", "<yourAccessKeyId>", "<yourAccessKeySecret>")
+func UploadFile(filename string, fd *os.File) error {
+	client, err := oss.New(config.Endpoint, config.AccessKeyId, config.AccessKeySecret)
 	if err != nil {
 		fmt.Println("Error:", err)
-		os.Exit(-1)
+		return err
 	}
-	bucket, err := client.Bucket("<yourBucketName>")
+	bucket, err := client.Bucket(config.BucketName)
 	if err != nil {
 		return err
 	}
-	err = bucket.PutObject("<yourObjectName>", fd)
+	err = bucket.PutObject(filename, fd)
 	if err != nil {
 		return err
 	}
