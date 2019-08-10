@@ -16,7 +16,7 @@ type LoginModel struct {
 func (user *LoginModel) GenerateToken() string {
 	user.ExpiresAt = time.Now().Add(time.Hour * config.ExpiresTime).Unix()
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, user)
-	token, err := t.SignedString([]byte(config.SECRET_KEY))
+	token, err := t.SignedString([]byte(config.SecretKey))
 	if err != nil {
 		log.Println(err.Error())
 	}

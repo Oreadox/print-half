@@ -16,7 +16,7 @@ var db = ext.GetEngine()
 func VerifyToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	userinfo, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
-		return config.SECRET_KEY, nil
+		return config.SecretKey, nil
 	})
 	if err != nil {
 		log.Println(err.Error())
@@ -40,7 +40,7 @@ func VerifyToken(c *gin.Context) {
 // 校验token的函数(供socket.io使用)
 func VerifyAuthToken(token string) (UserModel, string) {
 	userinfo, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
-		return config.SECRET_KEY, nil
+		return config.SecretKey, nil
 	})
 	if err != nil {
 		log.Println(err.Error())
