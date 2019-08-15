@@ -11,6 +11,4 @@ func init() {
 	var picture PictureModel
 	picture.CreateTable()
 
-	var status StatusModel
-	status.CreateTable()
 }
