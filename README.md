@@ -9,6 +9,7 @@
       go get github.com/gin-gonic/gin
       go get github.com/go-xorm/xorm
       go get github.com/go-sql-driver/mysql
+      go get github.com/aliyun/aliyun-oss-go-sdk/oss
       
 - 环境变量设置      
     
