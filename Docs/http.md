@@ -176,9 +176,9 @@
 ## 获取图片
 
 - url: https://draw2019.oss-cn-shanghai.aliyuncs.com/picture/pic_name
+- url(指定大小): https://draw2019.oss-cn-shanghai.aliyuncs.com/picture/pic_name?x-oss-process=image/resize,m_fill,h_高度,w_宽度,limit_0
 - method: GET
- 
- 
+
 ## 上传图片
 先将图片上传至服务器，服务器会把图片上传到oss上
 
