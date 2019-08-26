@@ -81,7 +81,7 @@ func UploadFile(filename string, fd *os.File) error {
 	if err != nil {
 		return err
 	}
-	err = bucket.PutObject(filename, fd)
+	err = bucket.PutObject("picture/"+filename, fd)
 	if err != nil {
 		return err
 	}
