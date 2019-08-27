@@ -5,6 +5,9 @@ import (
 	utils "PrintHalf/Utils"
 	"github.com/googollee/go-socket.io"
 	"log"
+	"math/rand"
+	"time"
+	"unsafe"
 )
 
 var matching []socketio.Conn
@@ -48,13 +51,27 @@ func match(s1, s2 socketio.Conn) {
 	if s1 == s2 {
 		return
 	} else {
+		count, err := db.Count(&QuestionModel{})
+		var question *QuestionModel
+		var has bool
+		for !has {
+			rand.Seed(time.Now().UnixNano())
+			num := rand.Intn(*(*int)(unsafe.Pointer(&count))) + 1 //[1,count]
+			question.Id = num
+			has, err = db.Get(num)
+			if err != nil {
+				log.Println(err.Error())
+				return
+			}
+		}
 		picture := PictureModel{
-			UserId1: s1.Context().(int),
-			UserId2: s2.Context().(int),
+			UserId1:  s1.Context().(int),
+			UserId2:  s2.Context().(int),
+			Question: question.Name,
 		}
 		user1 := UserModel{Id: picture.UserId1}
 		user2 := UserModel{Id: picture.UserId2}
-		_, err := db.Get(user1)
+		_, err = db.Get(user1)
 		_, err = db.Get(user2)
 		if err != nil {
 			log.Println(err.Error())
@@ -66,6 +83,7 @@ func match(s1, s2 socketio.Conn) {
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user2.Name,
+				"question":          question.Name,
 			},
 			// 其他再加
 		})
@@ -73,6 +91,7 @@ func match(s1, s2 socketio.Conn) {
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user1.Name,
+				"question":          question.Name,
 			},
 			// 其他再加
 		})
