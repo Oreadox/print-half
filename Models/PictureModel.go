@@ -9,6 +9,7 @@ type PictureModel struct {
 	Id             int `xorm:"pk autoincr"`
 	UserId1        int
 	UserId2        int
+	Question       string    `xorm:"varchar(30)"`
 	TopFileName    string    `xorm:"varchar(128)"`
 	BottomFileName string    `xorm:"varchar(128)"`
 	CreateTime     time.Time `xorm:"datetime created notnull"`

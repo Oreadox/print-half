@@ -42,6 +42,22 @@ func Login(c *gin.Context) (*map[string]interface{}, int, error) {
 		}, http.StatusInternalServerError, err
 	}
 	if !has {
+		student := StudentModel{
+			StudentId: userinfo.StudentId,
+			Name:      userinfo.Name,
+		}
+		has, err = db.Get(&student)
+		if err != nil {
+			return &map[string]interface{}{
+				"message": err.Error(),
+				"status":  0,
+			}, http.StatusInternalServerError, err
+		} else if !has {
+			return &map[string]interface{}{
+				"message": "学号与姓名不对应",
+				"status":  0,
+			}, http.StatusNotFound, err
+		}
 		_, err := db.Insert(user)
 		if err != nil {
 			return &map[string]interface{}{

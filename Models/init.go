@@ -11,4 +11,9 @@ func init() {
 	var picture PictureModel
 	picture.CreateTable()
 
+	var question QuestionModel
+	question.CreateTable()
+
+	var student StudentModel
+	student.CreateTable()
 }

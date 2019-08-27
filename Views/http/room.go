@@ -49,6 +49,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			"status":  0,
 		}, http.StatusInternalServerError, err
 	}
+	os.Remove("./static/uploadfile/" + filename)
 	return &map[string]interface{}{
 		"message": "成功",
 		"status":  1,
@@ -56,12 +57,14 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 }
 
 func SaveFile(file multipart.File, filename string) (*os.File, error) {
+	os.MkdirAll("/static/uploadfile/", 0755)
 	out, err := os.Create("static/uploadfile/" + filename)
 	if err != nil {
 		return nil, err
 	}
 	defer out.Close()
 	_, err = io.Copy(out, file)
+	out, err = os.Open("./static/uploadfile/" + filename)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +81,7 @@ func UploadFile(filename string, fd *os.File) error {
 	if err != nil {
 		return err
 	}
-	err = bucket.PutObject(filename, fd)
+	err = bucket.PutObject("picture/"+filename, fd)
 	if err != nil {
 		return err
 	}
