@@ -2,6 +2,7 @@ package http
 
 import (
 	"PrintHalf/Config"
+	. "PrintHalf/Models"
 	utils "PrintHalf/Utils"
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -24,7 +25,23 @@ func RoomView(g *gin.RouterGroup) {
 }
 
 func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
+	user, _ := c.Get("user")
+	userId := user.(UserModel).Id
+	var picture PictureModel
+	has, err := db.Where("user_id1 = ?", userId).Or("user_id2 = ?", userId).OrderBy("id").Desc().Get(picture)
+	if err != nil {
+		return &map[string]interface{}{
+			"message": err.Error(),
+			"status":  0,
+		}, http.StatusInternalServerError, err
+	} else if !has {
+		return &map[string]interface{}{
+			"message": "房间不存在",
+			"status":  0,
+		}, http.StatusNotFound, nil
+	}
 	file, _, err := c.Request.FormFile("image") //image这个是uplaodify参数定义中的   'fileObjName':'image'
+	format := c.Request.FormValue("format")
 	if err != nil {
 		log.Println(err)
 		return &map[string]interface{}{
@@ -32,7 +49,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			"status":  0,
 		}, http.StatusBadRequest, err
 	}
-	filename := utils.GetRandomString(16)
+	filename := utils.GetRandomString(16) + "." + format
 	out, err := SaveFile(file, filename)
 	if err != nil {
 		log.Println(err)
@@ -49,10 +66,19 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			"status":  0,
 		}, http.StatusInternalServerError, err
 	}
+	if picture.UserId1 == userId {
+		picture.TopFileName = filename
+	} else if picture.UserId2 == userId {
+		picture.BottomFileName = filename
+	}
 	os.Remove("./static/uploadfile/" + filename)
 	return &map[string]interface{}{
 		"message": "成功",
 		"status":  1,
+		"data": &map[string]interface{}{
+			"picture_id": picture.Id,
+			"filename":   filename,
+		},
 	}, http.StatusOK, nil
 }
 

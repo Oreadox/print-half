@@ -41,6 +41,7 @@
                     "data":{
                         "another_user_name": 另一个用户的名字，
                         "question": 题目
+                        "position": "top" or "bottom" (位置)
                     }
           }
       ]

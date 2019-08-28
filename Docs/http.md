@@ -196,12 +196,28 @@
 | args | nullable | type | remark   |
 |:------:|:------:|:------:|:------:|
 |    image    |    false    |    file   |    图片（通过form发送）    |
+|    format    |    false    |    str   |    图片格式（通过form发送）    |
 
       
 - return:
 
       {
           "message": "成功",
-          "status": 1
+          "status": 1,
+          "data":{
+              "picture_id": 图片id,
+              "filename": 当前用户所画的图片的文件名
+          }
       }, 200
 
+      //找不到用户所在的房间
+      {
+          "message": "房间不存在"，
+          "status": 0
+      }, 404      
+
+      //发生其他错误
+      {
+          "message": 错误讯息，
+          "status": 0
+      }, 500
