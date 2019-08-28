@@ -28,7 +28,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 	user, _ := c.Get("user")
 	userId := user.(UserModel).Id
 	var picture PictureModel
-	has, err := db.Where("user_id1 = ?", userId).Or("user_id2 = ?", userId).OrderBy("id").Desc().Get(picture)
+	has, err := db.Where("user_id1 = ?", userId).Or("user_id2 = ?", userId).OrderBy("id DESC").Get(&picture)
 	if err != nil {
 		return &map[string]interface{}{
 			"message": err.Error(),
@@ -68,8 +68,22 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 	}
 	if picture.UserId1 == userId {
 		picture.TopFileName = filename
+		_, err = db.Id(picture.Id).Cols("top_file_name").Update(picture)
+		if err != nil {
+			return &map[string]interface{}{
+				"message": err.Error(),
+				"status":  0,
+			}, http.StatusBadRequest, err
+		}
 	} else if picture.UserId2 == userId {
 		picture.BottomFileName = filename
+		_, err = db.Id(picture.Id).Cols("bottom_file_name").Update(picture)
+		if err != nil {
+			return &map[string]interface{}{
+				"message": err.Error(),
+				"status":  0,
+			}, http.StatusBadRequest, err
+		}
 	}
 	os.Remove("./static/uploadfile/" + filename)
 	return &map[string]interface{}{
@@ -83,7 +97,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 }
 
 func SaveFile(file multipart.File, filename string) (*os.File, error) {
-	os.MkdirAll("/static/uploadfile/", 0755)
+	os.MkdirAll("static/uploadfile/", os.ModePerm)
 	out, err := os.Create("static/uploadfile/" + filename)
 	if err != nil {
 		return nil, err

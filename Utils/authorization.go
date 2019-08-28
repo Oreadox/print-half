@@ -23,7 +23,7 @@ func VerifyToken(c *gin.Context) {
 	}
 	student_id := userinfo.Claims.(jwt.MapClaims)["student_id"].(string)
 	user := UserModel{StudentId: student_id}
-	has, err := db.Get(user)
+	has, err := db.Get(&user)
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -32,6 +32,7 @@ func VerifyToken(c *gin.Context) {
 			"status":  0,
 			"message": "token无效",
 		})
+		c.Abort()
 	}
 	c.Set("user", user)
 	c.Next()
@@ -47,7 +48,7 @@ func VerifyAuthToken(token string) (UserModel, string) {
 	}
 	student_id := userinfo.Claims.(jwt.MapClaims)["student_id"].(string)
 	user := UserModel{StudentId: student_id}
-	has, err := db.Get(user)
+	has, err := db.Get(&user)
 	if err != nil {
 		log.Println(err.Error())
 	}

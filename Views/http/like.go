@@ -79,8 +79,8 @@ func Rank(c *gin.Context) (*map[string]interface{}, int, error) {
 		//var picture_data map[string]interface{}
 		user1 := UserModel{Id: picture.UserId1}
 		user2 := UserModel{Id: picture.UserId2}
-		db.Get(user1)
-		db.Get(user2)
+		db.Get(&user1)
+		db.Get(&user2)
 		picture_data := map[string]interface{}{
 			"name1":            user1.Name,
 			"name2":            user2.Name,
