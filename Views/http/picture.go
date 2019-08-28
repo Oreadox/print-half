@@ -49,8 +49,8 @@ func GetPicture(c *gin.Context) (*map[string]interface{}, int, error) {
 	}, UserModel{
 		Id: picture.UserId2,
 	}
-	db.Get(user1)
-	db.Get(user2)
+	db.Get(&user1)
+	db.Get(&user2)
 	return &map[string]interface{}{
 		"message": "成功",
 		"status":  1,
@@ -86,8 +86,8 @@ func GetPictures(c *gin.Context) (*map[string]interface{}, int, error) {
 		//var picture_data map[string]interface{}
 		user1 := UserModel{Id: picture.UserId1}
 		user2 := UserModel{Id: picture.UserId2}
-		db.Get(user1)
-		db.Get(user2)
+		db.Get(&user1)
+		db.Get(&user2)
 		picture_data := map[string]interface{}{
 			"id":               picture.Id,
 			"name1":            user1.Name,
