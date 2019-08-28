@@ -84,6 +84,7 @@ func match(s1, s2 socketio.Conn) {
 			"data": jsonify{
 				"another_user_name": user2.Name,
 				"question":          question.Name,
+				"position":          "top",
 			},
 			// 其他再加
 		})
@@ -92,6 +93,7 @@ func match(s1, s2 socketio.Conn) {
 			"data": jsonify{
 				"another_user_name": user1.Name,
 				"question":          question.Name,
+				"position":          "bottom",
 			},
 			// 其他再加
 		})
