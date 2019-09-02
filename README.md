@@ -10,6 +10,7 @@
       go get github.com/go-xorm/xorm
       go get github.com/go-sql-driver/mysql
       go get github.com/aliyun/aliyun-oss-go-sdk/oss
+      go get github.com/gin-contrib/cors
       
 - 环境变量设置      
     
