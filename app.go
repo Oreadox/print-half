@@ -2,6 +2,7 @@ package main
 
 import (
 	"PrintHalf/Views"
+	"github.com/gin-contrib/cors"
 	"log"
 	"net/http"
 )
@@ -12,7 +13,8 @@ var (
 )
 
 func main() {
-	go route.Run(":8080")
+	route.Use(cors.Default())
+	go route.Run(":8001")
 	go socket.Serve()
 	defer socket.Close()
 	http.HandleFunc("/socket.io/", handle)
