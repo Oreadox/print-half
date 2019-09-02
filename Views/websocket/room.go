@@ -3,6 +3,7 @@ package websocket
 import (
 	. "PrintHalf/Models"
 	utils "PrintHalf/Utils"
+	"encoding/json"
 	"github.com/googollee/go-socket.io"
 	"log"
 	"math/rand"
@@ -12,8 +13,13 @@ import (
 
 var matching []socketio.Conn
 
-func Join(s socketio.Conn, json map[string]interface{}) {
-	token := json["token"].(string)
+func Join(s socketio.Conn, data string) {
+	var tokenData struct {
+		Token string
+	}
+	json.Unmarshal([]byte(data), &tokenData)
+	token := tokenData.Token
+	//fmt.Println(token)
 	user, err := utils.VerifyAuthToken(token)
 	if err != "" {
 		s.Emit("join", jsonify{
@@ -24,7 +30,7 @@ func Join(s socketio.Conn, json map[string]interface{}) {
 		s.Emit("join", jsonify{
 			"message": "进入房间成功",
 		})
-		if len(matching) != 1 {
+		if len(matching) != 0 {
 			match(s, matching[0])
 		} else {
 			matching = append(matching, s)

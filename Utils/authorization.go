@@ -45,12 +45,14 @@ func VerifyAuthToken(token string) (UserModel, string) {
 	})
 	if err != nil {
 		log.Println(err.Error())
+		return UserModel{}, "token无效"
 	}
 	student_id := userinfo.Claims.(jwt.MapClaims)["student_id"].(string)
 	user := UserModel{StudentId: student_id}
 	has, err := db.Get(&user)
 	if err != nil {
 		log.Println(err.Error())
+		return UserModel{}, err.Error()
 	}
 	if !has {
 		return UserModel{}, "token无效"
