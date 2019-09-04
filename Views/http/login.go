@@ -23,12 +23,12 @@ func Login(c *gin.Context) (*map[string]interface{}, int, error) {
 		return &map[string]interface{}{
 			"message": err.Error(),
 			"status":  0,
-		}, http.StatusBadRequest, err
+		}, http.StatusOK, err
 	} else if userinfo.StudentId == "" || userinfo.Name == "" {
 		return &map[string]interface{}{
 			"message": "学号和姓名不能为空",
 			"status":  0,
-		}, http.StatusBadRequest, nil
+		}, http.StatusOK, nil
 	}
 	user := UserModel{
 		StudentId: userinfo.StudentId,
@@ -56,7 +56,7 @@ func Login(c *gin.Context) (*map[string]interface{}, int, error) {
 			return &map[string]interface{}{
 				"message": "学号与姓名不对应",
 				"status":  0,
-			}, http.StatusNotFound, err
+			}, http.StatusOK, err
 		}
 		_, err := db.Insert(user)
 		if err != nil {
