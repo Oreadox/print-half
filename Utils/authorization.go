@@ -16,7 +16,7 @@ var db = ext.GetEngine()
 func VerifyToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	userinfo, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
-		return config.SecretKey, nil
+		return []byte(config.SecretKey), nil
 	})
 	if err != nil {
 		log.Println(err.Error())
@@ -41,11 +41,10 @@ func VerifyToken(c *gin.Context) {
 // 校验token的函数(供socket.io使用)
 func VerifyAuthToken(token string) (UserModel, string) {
 	userinfo, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
-		return config.SecretKey, nil
+		return []byte(config.SecretKey), nil
 	})
 	if err != nil {
-		log.Println(err.Error())
-		return UserModel{}, "token无效"
+		log.Println("ws auth meet error: " + err.Error())
 	}
 	student_id := userinfo.Claims.(jwt.MapClaims)["student_id"].(string)
 	user := UserModel{StudentId: student_id}

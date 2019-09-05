@@ -38,7 +38,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 		return &map[string]interface{}{
 			"message": "房间不存在",
 			"status":  0,
-		}, http.StatusNotFound, nil
+		}, http.StatusOK, nil
 	}
 	file, _, err := c.Request.FormFile("image") //image这个是uplaodify参数定义中的   'fileObjName':'image'
 	format := c.Request.FormValue("format")
@@ -73,7 +73,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			return &map[string]interface{}{
 				"message": err.Error(),
 				"status":  0,
-			}, http.StatusBadRequest, err
+			}, http.StatusInternalServerError, err
 		}
 	} else if picture.UserId2 == userId {
 		picture.BottomFileName = filename
@@ -82,7 +82,7 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			return &map[string]interface{}{
 				"message": err.Error(),
 				"status":  0,
-			}, http.StatusBadRequest, err
+			}, http.StatusInternalServerError, err
 		}
 	}
 	os.Remove("./static/uploadfile/" + filename)

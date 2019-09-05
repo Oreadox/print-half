@@ -34,7 +34,7 @@ func Like(c *gin.Context) (*map[string]interface{}, int, error) {
 		return &map[string]interface{}{
 			"message": err.Error(),
 			"status":  0,
-		}, http.StatusBadRequest, err
+		}, http.StatusOK, err
 	}
 	picture := PictureModel{
 		Id: picture_id.id,
@@ -57,7 +57,7 @@ func Like(c *gin.Context) (*map[string]interface{}, int, error) {
 		return &map[string]interface{}{
 			"message": err.Error(),
 			"status":  0,
-		}, http.StatusBadRequest, err
+		}, http.StatusInternalServerError, err
 	}
 	return &map[string]interface{}{
 		"message": "成功",
