@@ -4,6 +4,7 @@ import (
 	. "PrintHalf/Models"
 	utils "PrintHalf/Utils"
 	"encoding/json"
+	"fmt"
 	"github.com/googollee/go-socket.io"
 	"log"
 	"math/rand"
@@ -19,7 +20,7 @@ func Join(s socketio.Conn, data string) {
 	}
 	json.Unmarshal([]byte(data), &tokenData)
 	token := tokenData.Token
-	//fmt.Println(token)
+	fmt.Println(token)
 	user, err := utils.VerifyAuthToken(token)
 	if err != "" {
 		s.Emit("join", jsonify{
@@ -33,7 +34,15 @@ func Join(s socketio.Conn, data string) {
 		if len(matching) != 0 {
 			match(s, matching[0])
 		} else {
-			matching = append(matching, s)
+			exist := false
+			for _, v := range matching {
+				if v == s {
+					exist = true
+				}
+			}
+			if exist == false {
+				matching = append(matching, s)
+			}
 		}
 	}
 }
