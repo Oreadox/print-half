@@ -15,6 +15,13 @@ var db = ext.GetEngine()
 // 校验token的中间件
 func VerifyToken(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
+	if len(token) == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  0,
+			"message": "需要token",
+		})
+		c.Abort()
+	}
 	userinfo, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
 		return []byte(config.SecretKey), nil
 	})

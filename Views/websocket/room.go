@@ -3,45 +3,58 @@ package websocket
 import (
 	. "PrintHalf/Models"
 	utils "PrintHalf/Utils"
-	"encoding/json"
 	"fmt"
 	"github.com/googollee/go-socket.io"
+	jsoniter "github.com/json-iterator/go"
 	"log"
 	"math/rand"
+	"strconv"
 	"time"
-	"unsafe"
 )
 
-var matching []socketio.Conn
+type MatchingModel struct {
+	Sid    string
+	UserId int
+}
+
+var matching []MatchingModel
+var broadcast = socketio.NewBroadcast()
 
 func Join(s socketio.Conn, data string) {
+
 	var tokenData struct {
 		Token string
 	}
-	json.Unmarshal([]byte(data), &tokenData)
+	broadcast.Join(s.ID(), s)
+	jsoniter.Unmarshal([]byte(data), &tokenData)
 	token := tokenData.Token
-	fmt.Println(token)
+	fmt.Println("token:" + token)
+	//fmt.Println(token)
 	user, err := utils.VerifyAuthToken(token)
+
 	if err != "" {
 		s.Emit("join", jsonify{
 			"message": err,
 		})
 	} else {
-		s.SetContext(user.Id)
+		nowUser := MatchingModel{
+			Sid:    s.ID(),
+			UserId: user.Id,
+		}
 		s.Emit("join", jsonify{
 			"message": "进入房间成功",
 		})
 		if len(matching) != 0 {
-			match(s, matching[0])
+			match(nowUser, matching[0])
 		} else {
 			exist := false
 			for _, v := range matching {
-				if v == s {
+				if v.UserId == nowUser.UserId {
 					exist = true
 				}
 			}
 			if exist == false {
-				matching = append(matching, s)
+				matching = append(matching, nowUser)
 			}
 		}
 	}
@@ -50,7 +63,7 @@ func Join(s socketio.Conn, data string) {
 func Exit(s socketio.Conn) {
 	j := 0
 	for _, val := range matching {
-		if val != s {
+		if val.Sid != s.ID() {
 			matching[j] = val
 			j++
 		}
@@ -62,39 +75,42 @@ func Exit(s socketio.Conn) {
 }
 
 // 匹配
-func match(s1, s2 socketio.Conn) {
-	if s1 == s2 {
+func match(s1, s2 MatchingModel) {
+
+	if s1.UserId == s2.UserId {
 		return
 	} else {
 		count, err := db.Count(&QuestionModel{})
-		var question *QuestionModel
+		strInt64 := strconv.FormatInt(count, 10)
+		count32, _ := strconv.Atoi(strInt64)
+		question := QuestionModel{}
 		var has bool
 		for !has {
 			rand.Seed(time.Now().UnixNano())
-			num := rand.Intn(*(*int)(unsafe.Pointer(&count))) + 1 //[1,count]
+			num := rand.Intn(count32) + 1 //[1,count]
 			question.Id = num
-			has, err = db.Get(num)
+			has, err = db.Get(&question)
 			if err != nil {
 				log.Println(err.Error())
 				return
 			}
 		}
 		picture := PictureModel{
-			UserId1:  s1.Context().(int),
-			UserId2:  s2.Context().(int),
+			UserId1:  s1.UserId,
+			UserId2:  s2.UserId,
 			Question: question.Name,
 		}
 		user1 := UserModel{Id: picture.UserId1}
 		user2 := UserModel{Id: picture.UserId2}
-		_, err = db.Get(user1)
-		_, err = db.Get(user2)
+		_, err = db.Get(&user1)
+		_, err = db.Get(&user2)
 		if err != nil {
 			log.Println(err.Error())
 			return
 		}
 		db.Insert(picture)
 		matching = matching[1:]
-		s1.Emit("match", jsonify{
+		broadcast.Send(s1.Sid, "match", jsonify{
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user2.Name,
@@ -103,7 +119,7 @@ func match(s1, s2 socketio.Conn) {
 			},
 			// 其他再加
 		})
-		s2.Emit("match", jsonify{
+		broadcast.Send(s2.Sid, "match", jsonify{
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user1.Name,

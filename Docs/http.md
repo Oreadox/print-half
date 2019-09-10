@@ -189,14 +189,14 @@
 先将图片上传至服务器，服务器会把图片上传到oss上
 
 - url: /api/room/upload
-- method: GET
+- method: POST
 - request_header: Authorization: token
 - args:      
 
 | args | nullable | type | remark   |
 |:------:|:------:|:------:|:------:|
-|    image    |    false    |    file   |    图片（通过form发送）    |
-|    format    |    false    |    str   |    图片格式（通过form发送）    |
+|    image    |    false    |    file   |    图片base64    |
+|    format    |    false    |    str   |    图片格式    |
 
       
 - return:

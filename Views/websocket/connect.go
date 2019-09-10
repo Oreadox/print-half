@@ -20,7 +20,7 @@ func DisConnect(s socketio.Conn, msg string) {
 	fmt.Println("closed", msg)
 	j := 0
 	for _, val := range matching {
-		if val != s {
+		if val.Sid != s.ID() {
 			matching[j] = val
 			j++
 		}
