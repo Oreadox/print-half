@@ -195,7 +195,7 @@
 
 | args | nullable | type | remark   |
 |:------:|:------:|:------:|:------:|
-|    image    |    false    |    file   |    图片base64    |
+|    img    |    false    |    str   |    图片base64    |
 |    format    |    false    |    str   |    图片格式    |
 
       
