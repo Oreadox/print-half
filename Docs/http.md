@@ -195,8 +195,8 @@
 
 | args | nullable | type | remark   |
 |:------:|:------:|:------:|:------:|
-|    image    |    false    |    file   |    图片（通过form发送）    |
-|    format    |    false    |    str   |    图片格式（通过form发送）    |
+|    image    |    false    |    file   |    图片base64    |
+|    format    |    false    |    str   |    图片格式    |
 
       
 - return:

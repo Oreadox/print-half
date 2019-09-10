@@ -4,12 +4,11 @@ import (
 	"PrintHalf/Config"
 	. "PrintHalf/Models"
 	utils "PrintHalf/Utils"
+	"encoding/base64"
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
-	"io"
 	"log"
-	"mime/multipart"
 	"net/http"
 	"os"
 )
@@ -25,6 +24,27 @@ func RoomView(g *gin.RouterGroup) {
 }
 
 func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
+	var fileInfo UploadModel
+	err := c.ShouldBindJSON(&fileInfo)
+	if err != nil {
+		return &map[string]interface{}{
+			"message": err.Error(),
+			"status":  0,
+		}, http.StatusOK, err
+	}
+	if len(fileInfo.Img) == 0 || len(fileInfo.Format) == 0 {
+		return &map[string]interface{}{
+			"message": "图片信息不能为空",
+			"status":  0,
+		}, http.StatusOK, err
+	}
+	img := fileInfo.Img[19+len(fileInfo.Format):]
+	format := fileInfo.Format
+	enc := base64.StdEncoding
+	file, err := enc.DecodeString(img)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	user, _ := c.Get("user")
 	userId := user.(UserModel).Id
 	var picture PictureModel
@@ -39,15 +59,6 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 			"message": "房间不存在",
 			"status":  0,
 		}, http.StatusOK, nil
-	}
-	file, _, err := c.Request.FormFile("image") //image这个是uplaodify参数定义中的   'fileObjName':'image'
-	format := c.Request.FormValue("format")
-	if err != nil {
-		log.Println(err)
-		return &map[string]interface{}{
-			"message": err.Error(),
-			"status":  0,
-		}, http.StatusBadRequest, err
 	}
 	filename := utils.GetRandomString(16) + "." + format
 	out, err := SaveFile(file, filename)
@@ -96,14 +107,16 @@ func Upload(c *gin.Context) (*map[string]interface{}, int, error) {
 	}, http.StatusOK, nil
 }
 
-func SaveFile(file multipart.File, filename string) (*os.File, error) {
+func SaveFile(file []byte, filename string) (*os.File, error) {
 	os.MkdirAll("static/uploadfile/", os.ModePerm)
 	out, err := os.Create("static/uploadfile/" + filename)
 	if err != nil {
 		return nil, err
 	}
+	out.Write(file)
+	out.Close()
 	defer out.Close()
-	_, err = io.Copy(out, file)
+	//_, err = io.Copy(out, file)
 	out, err = os.Open("./static/uploadfile/" + filename)
 	if err != nil {
 		return nil, err
