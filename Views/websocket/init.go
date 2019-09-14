@@ -29,6 +29,7 @@ func socketInit() {
 		log.Println("meet error:", e)
 	})
 	socket.OnEvent("/", "join", Join)
+	socket.OnEvent("/", "exit", Exit)
 }
 
 func GetSocket() *socketio.Server {

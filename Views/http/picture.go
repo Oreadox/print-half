@@ -67,7 +67,7 @@ func GetPicture(c *gin.Context) (*map[string]interface{}, int, error) {
 func GetPictures(c *gin.Context) (*map[string]interface{}, int, error) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pictures := make([]PictureModel, 0)
-	err := db.Limit(12, 12*(page-1)).Find(&pictures)
+	err := db.Limit(12, 12*(page-1)).Where("bottom_file_name is NOT NULL AND top_file_name is not null").Find(&pictures)
 	if err != nil {
 		return &map[string]interface{}{
 			"message": err.Error(),
