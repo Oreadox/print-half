@@ -62,16 +62,20 @@ func Join(s socketio.Conn, data string) {
 
 func Exit(s socketio.Conn) {
 	j := 0
+	exist := false
 	for _, val := range matching {
 		if val.Sid != s.ID() {
+			exist = true
 			matching[j] = val
 			j++
 		}
 	}
 	matching = matching[:j]
-	s.Emit("exit", jsonify{
-		"message": "退出房间成功",
-	})
+	if exist {
+		s.Emit("exit", jsonify{
+			"message": "退出房间成功",
+		})
+	}
 }
 
 // 匹配
