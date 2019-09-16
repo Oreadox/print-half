@@ -118,7 +118,7 @@ func match(s1, s2 MatchingModel) {
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user2.Name,
-				"question":          question.Name,
+				"question":          question.Id,
 				"position":          "top",
 			},
 			// 其他再加
@@ -127,7 +127,7 @@ func match(s1, s2 MatchingModel) {
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user1.Name,
-				"question":          question.Name,
+				"question":          question.Id,
 				"position":          "bottom",
 			},
 			// 其他再加
