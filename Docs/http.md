@@ -123,13 +123,20 @@
 
 | args | nullable | type | remark   |
 |:------:|:------:|:------:|:------:|
-|    id    |    false    |    int   |    图片id    |      
+|    id    |    false    |    int   |    图片id    |
+|    num    |    false    |    int   |    点赞数目(1或-1)    |          
 
 - return:
 
       {
           "message": "成功",
           "status": 1
+      }, 200
+      
+      //参数错误(非有效值或取消点赞后该图片赞数将为负)
+      {
+          "message": "无效的参数",
+          "status": 0
       }, 200
       
       //该图不存在
