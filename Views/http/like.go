@@ -26,18 +26,22 @@ func LikeView(g *gin.RouterGroup) {
 }
 
 func Like(c *gin.Context) (*map[string]interface{}, int, error) {
-	var picture_id struct {
-		id int
-	}
-	err := c.ShouldBindJSON(&picture_id)
+	var likeInfo LikeModel
+	err := c.ShouldBindJSON(&likeInfo)
 	if err != nil {
 		return &map[string]interface{}{
 			"message": err.Error(),
 			"status":  0,
 		}, http.StatusOK, err
 	}
+	if !(likeInfo.Num == 1 || likeInfo.Num == -1) {
+		return &map[string]interface{}{
+			"message": "无效的参数",
+			"status":  0,
+		}, http.StatusOK, nil
+	}
 	picture := PictureModel{
-		Id: picture_id.id,
+		Id: likeInfo.Id,
 	}
 	has, err := db.Get(&picture)
 	if !has {
@@ -51,7 +55,13 @@ func Like(c *gin.Context) (*map[string]interface{}, int, error) {
 			"status":  0,
 		}, http.StatusInternalServerError, err
 	}
-	picture.LikeNum += 1
+	if picture.LikeNum <= 0 && likeInfo.Num < 0 {
+		return &map[string]interface{}{
+			"message": "无效的参数",
+			"status":  0,
+		}, http.StatusOK, nil
+	}
+	picture.LikeNum += likeInfo.Num
 	_, err = db.Id(picture.Id).Cols("like_num").Update(picture)
 	if err != nil {
 		return &map[string]interface{}{
