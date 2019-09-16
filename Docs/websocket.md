@@ -40,7 +40,7 @@
                     "message": "匹配成功",
                     "data":{
                         "another_user_name": 另一个用户的名字，
-                        "question": 题目
+                        "question": 题目id
                         "position": "top" or "bottom" (位置)
                     }
           }
