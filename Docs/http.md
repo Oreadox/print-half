@@ -45,7 +45,7 @@
 
 | args | nullable | type | remark   |
 |:------:|:------:|:------:|:------:|
-|    page    |    true    |    int   |    页号(默认为1）    |
+|    page    |    true    |    int   |    页号(不填则默认不分页全部返回）    |
 
 - return:
 
@@ -64,7 +64,7 @@
                   ...
               ]
           },
-          "total_page": 总页数
+          "total_page": 总页数         //若不分页则无此项
       }, 200
       // 一页暂定12张
       
