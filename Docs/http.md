@@ -40,7 +40,6 @@
 ## 分页的所有图片信息
 - url: /api/picture/all
 - method: GET
-- request_header: Authorization: token
 - args:
 
 | args | nullable | type | remark   |
@@ -83,7 +82,6 @@
 ## 单个图片信息
 - url: /api/picture
 - method: GET
-- request_header: Authorization: token
 - args:
 
 | args | nullable | type | remark   |
