@@ -154,9 +154,11 @@
 - url: /api/like/rank
 - method: GET
 - request_header: Authorization: token
-* args:      
-    
-  none
+- args:      
+
+| args | nullable | type | remark   |
+|:------:|:------:|:------:|:------:|
+|    num    |    false    |    int   |   数目（默认为3）    |     
 - return:
 
       {
