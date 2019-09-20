@@ -59,7 +59,7 @@ func GetPicture(c *gin.Context) (*map[string]interface{}, int, error) {
 			"name2":            user2.Name,
 			"top_file_name":    picture.TopFileName,
 			"bottom_file_name": picture.BottomFileName,
-			//"like_num": picture.LikeNum,
+			"like_num":         picture.LikeNum,
 		},
 	}, http.StatusOK, nil
 }
