@@ -61,5 +61,40 @@
           {
               "message": "退出房间成功"
           }
-      ]      
+      ]
+      
+      
+## 进入下一回合
+- input
+
+      [
+          "next",
+          {
+              "token": token        //token需为后台用户的
+          }
+      ]
+      
+      
+- return
+        
+        
+      // 向后台用户
+      [
+          "next",
+          {
+              "message": "成功"
+          }
+      ]
+      
+      
+      // 所有已连接的用户
+      [
+          "next_round",
+          {
+              "message": "下一回合开始"
+              "data": {
+                  "now_round": 当前回合
+              }
+          }
+      ]             
  

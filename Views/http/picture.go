@@ -69,7 +69,11 @@ func GetPictures(c *gin.Context) (*map[string]interface{}, int, error) {
 	pictures := make([]PictureModel, 0)
 	var totalPage int64
 	if page != 0 {
-		err := db.Limit(12, 12*(page-1)).Where("bottom_file_name is NOT NULL AND top_file_name is not null").Find(&pictures)
+		roundSetting := SettingModel{
+			Desc: "NowRound",
+		}
+		db.Get(&roundSetting)
+		err := db.Limit(12, 12*(page-1)).Where("bottom_file_name is NOT NULL AND top_file_name is not null AND round = ?", roundSetting.Value).Find(&pictures)
 		if err != nil {
 			return &map[string]interface{}{
 				"message": err.Error(),
