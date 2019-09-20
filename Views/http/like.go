@@ -79,7 +79,11 @@ func Like(c *gin.Context) (*map[string]interface{}, int, error) {
 func Rank(c *gin.Context) (*map[string]interface{}, int, error) {
 	num, _ := strconv.Atoi(c.DefaultQuery("num", "3"))
 	pictures := make([]PictureModel, 0)
-	err := db.OrderBy("like_num desc").Limit(num, 0).Find(&pictures)
+	roundSetting := SettingModel{
+		Desc: "NowRound",
+	}
+	db.Get(&roundSetting)
+	err := db.Where("round = ?", roundSetting.Value).OrderBy("like_num desc").Limit(num, 0).Find(&pictures)
 	if err != nil {
 		return &map[string]interface{}{
 			"message": err.Error(),
