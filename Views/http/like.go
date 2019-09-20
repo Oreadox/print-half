@@ -98,6 +98,7 @@ func Rank(c *gin.Context) (*map[string]interface{}, int, error) {
 			"name2":            user2.Name,
 			"top_file_name":    picture.TopFileName,
 			"bottom_file_name": picture.BottomFileName,
+			"like_num":         picture.LikeNum,
 		}
 		pictures_data = append(pictures_data, picture_data)
 	}
