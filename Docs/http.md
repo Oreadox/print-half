@@ -172,7 +172,8 @@
                       "name1": 用户1姓名,
                       "name2": 用户2姓名，
                       "top_file_name": 顶部图片文件名,
-                      "bottom_file_name": 底部图片文件名  
+                      "bottom_file_name": 底部图片文件名,
+                      "like_num": 点赞数  
                   },
                   ...
               ]
