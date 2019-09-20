@@ -30,6 +30,7 @@ func socketInit() {
 	})
 	socket.OnEvent("/", "join", Join)
 	socket.OnEvent("/", "exit", Exit)
+	socket.OnEvent("/", "next", Next) //进行下一轮
 }
 
 func GetSocket() *socketio.Server {

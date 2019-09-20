@@ -14,6 +14,7 @@ type PictureModel struct {
 	BottomFileName string    `xorm:"varchar(128)"`
 	CreateTime     time.Time `xorm:"datetime created notnull"`
 	LikeNum        int       `xorm:"default 0"`
+	Round          int       `xorm:"default 1"`
 }
 
 func (PictureModel) TableName() string {

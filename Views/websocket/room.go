@@ -18,20 +18,19 @@ type MatchingModel struct {
 }
 
 var matching []MatchingModel
-var broadcast = socketio.NewBroadcast()
+var playerBroadcast = socketio.NewBroadcast()
 
 func Join(s socketio.Conn, data string) {
 
 	var tokenData struct {
 		Token string
 	}
-	broadcast.Join(s.ID(), s)
+	playerBroadcast.Join(s.ID(), s)
 	jsoniter.Unmarshal([]byte(data), &tokenData)
 	token := tokenData.Token
 	fmt.Println("token:" + token)
 	//fmt.Println(token)
 	user, err := utils.VerifyAuthToken(token)
-
 	if err != "" {
 		s.Emit("join", jsonify{
 			"message": err,
@@ -99,10 +98,15 @@ func match(s1, s2 MatchingModel) {
 				return
 			}
 		}
+		roundSetting := SettingModel{
+			Desc: "NowRound",
+		}
+		db.Get(&roundSetting)
 		picture := PictureModel{
 			UserId1:  s1.UserId,
 			UserId2:  s2.UserId,
 			Question: question.Name,
+			Round:    roundSetting.Value,
 		}
 		user1 := UserModel{Id: picture.UserId1}
 		user2 := UserModel{Id: picture.UserId2}
@@ -114,7 +118,7 @@ func match(s1, s2 MatchingModel) {
 		}
 		db.Insert(picture)
 		matching = matching[1:]
-		broadcast.Send(s1.Sid, "match", jsonify{
+		playerBroadcast.Send(s1.Sid, "match", jsonify{
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user2.Name,
@@ -123,7 +127,7 @@ func match(s1, s2 MatchingModel) {
 			},
 			// 其他再加
 		})
-		broadcast.Send(s2.Sid, "match", jsonify{
+		playerBroadcast.Send(s2.Sid, "match", jsonify{
 			"message": "匹配成功",
 			"data": jsonify{
 				"another_user_name": user1.Name,

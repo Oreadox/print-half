@@ -16,4 +16,7 @@ func init() {
 
 	var student StudentModel
 	student.CreateTable()
+
+	var setting SettingModel
+	setting.CreateTable()
 }
