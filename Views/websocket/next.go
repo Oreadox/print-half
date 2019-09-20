@@ -21,7 +21,9 @@ func Next(s socketio.Conn, data string) {
 		s.Emit("next", jsonify{
 			"message": err,
 		})
+		return
 	}
+	fmt.Println("\n" + user.Name)
 	if user.Name != "test" {
 		s.Emit("next", jsonify{
 			"message": "无效后台用户",
@@ -48,7 +50,5 @@ func Next(s socketio.Conn, data string) {
 				},
 			})
 		}
-
 	}
-
 }
