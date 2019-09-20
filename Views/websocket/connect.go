@@ -9,7 +9,7 @@ import (
 var userBroadcast = socketio.NewBroadcast()
 
 func Connect(s socketio.Conn) error {
-	playerBroadcast.Join("allPlayer", s)
+	userBroadcast.Join("allPlayer", s)
 	log.Println("on connection")
 	s.Emit("connect", jsonify{
 		"message": "连接建立成功",
