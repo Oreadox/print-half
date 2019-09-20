@@ -9,9 +9,9 @@ import (
 )
 
 func Next(s socketio.Conn, data string) {
-	var tokenData struct {
+	tokenData := new(struct {
 		Token string
-	}
+	})
 	playerBroadcast.Join(s.ID(), s)
 	jsoniter.Unmarshal([]byte(data), &tokenData)
 	token := tokenData.Token
